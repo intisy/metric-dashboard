@@ -19,7 +19,7 @@
                      "billing"
                  ],
     "scripts":  {
-                    "build":  "bun build ./src/dashboard-core.js --outdir ./dist"
+                    "build":  "bun build ./src/dashboard-core.js --outdir ./dist --target bun --external @opencode-ai/plugin"
                 },
     "dependencies":  {
                          "firebase":  "^10.0.0",
