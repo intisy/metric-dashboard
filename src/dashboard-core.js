@@ -257,7 +257,7 @@ function readJSON(p) {
 function getAccountsData() {
   var allAccounts = [];
   var files = ["antigravity-accounts.json", "cursor-accounts.json", "zen-accounts.json"];
-  
+
   for (var file of files) {
     var raw = readJSON(join(CONFIG_FOLDER, file)) || readJSON(join(CONFIG_DIR, file));
     if (!raw?.accounts) continue;
@@ -293,7 +293,7 @@ function getAccountsData() {
 function buildSessionsWithCosts() {
   var db = openDB();
   var dbSessions = [];
-  
+
   if (db) {
     try {
       var sessions = db.query(
@@ -381,11 +381,11 @@ function buildSessionsWithCosts() {
       try { db.close(); } catch {}
     }
   }
-  
+
   var legacySessions = [];
   var sessionDir = join(CONFIG_DIR, "data", "storage", "session");
   var msgDirBase = join(CONFIG_DIR, "data", "storage", "message");
-  
+
   if (existsSync(sessionDir)) {
     try {
       for (var projectDir of readdirSync(sessionDir)) {
@@ -395,10 +395,10 @@ function buildSessionsWithCosts() {
             if (!file.endsWith(".json")) continue;
             var s = readJSON(join(fullDir, file));
             if (!s?.id || s.parentID) continue;
-            
+
             if (dbSessions.some(ds => ds.id === s.id)) continue;
             if (legacySessions.some(ls => ls.id === s.id)) continue;
-            
+
             var msgs = [];
             var msgDir = join(msgDirBase, s.id);
             if (existsSync(msgDir)) {
@@ -410,7 +410,7 @@ function buildSessionsWithCosts() {
                 }
               } catch {}
             }
-            
+
             var totalCost = 0;
             var tokens = { input: 0, output: 0, reasoning: 0, cacheRead: 0, cacheWrite: 0 };
             var modelUsage = {};
@@ -471,7 +471,7 @@ function buildSessionsWithCosts() {
       }
     } catch {}
   }
-  
+
   var allSessions = [...dbSessions, ...legacySessions];
   allSessions.sort((a, b) => b.updated - a.updated);
   return allSessions;
