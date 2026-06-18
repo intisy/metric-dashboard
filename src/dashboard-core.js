@@ -1901,19 +1901,18 @@ async function tryClaimServer() {
 const creditDashboardPlugin = async (ctx) => {
   setTimeout(startBackground, 0);
 
-  // `tool` is loaded lazily so the Node-runtime Claude daemon (which never
-  // builds this return value) does not need @opencode-ai/plugin installed.
-  const { tool } = await import("@opencode-ai/plugin");
-
+  // Return the raw tool object (no @opencode-ai/plugin import): a dynamic import
+  // of the SDK throws from the deployed plugin location → opencode would store an
+  // undefined hook and crash its provider list. The plain object is accepted as-is.
   return {
     tool: {
-      credit_dashboard: tool({
+      credit_dashboard: {
         description: "Get the URL of the credit usage dashboard. Shows account quotas and session costs across all synced devices.",
         args: {},
         async execute() {
           return "Credit usage dashboard: http://127.0.0.1:" + PORT;
         },
-      }),
+      },
     },
   };
 };
