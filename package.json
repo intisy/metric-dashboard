@@ -36,10 +36,12 @@
   },
   "scripts": {
     "build": "node scripts/build.js",
+    "test": "npm run build && vitest run",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@opencode-ai/plugin": "^0.15.30",
-    "esbuild": "^0.24.0"
+    "esbuild": "^0.24.0",
+    "vitest": "^3.2.6"
   }
 }
