@@ -62,7 +62,7 @@ Open the dashboard at http://127.0.0.1:3456 (Claude Code: run `/credits`).
 
 ## Configuration
 
-> Config files are **auto-created with defaults on first run** (via core `ensureConfig`). **Global console logging** for every plugin is toggled in `config/settings.json` (`logConsole: true`, the opencode.json-equivalent).
+> Config files are **never auto-created on launch** — settings are registered with defaults (core `defineConfig`) and edited in the loader's **Plugins → Configure** screen (or `/<plugin>-config`); a file is written only when you change a value. **Global console logging** for every plugin is toggled in `config/settings.json` (`logConsole: true`, the opencode.json-equivalent).
 
 Config file: `~/.config/opencode/config/metric-dashboard.json` (preferred) or `~/.config/opencode/metric-dashboard.json` (fallback). For Claude Code, replace `opencode` with `claude`.
 
