@@ -1,9 +1,12 @@
 // metric-dashboard config + logging — delegated to the shared core library
 // so every plugin uses one config + logging system. Public API kept stable for
 // dashboard-core.js (getAppConfigDir, getPluginConfig, writeLog).
-import { getAppConfigDir, loadConfig, makeWriteLog } from "../core/src/index.js";
+import { getAppConfigDir, loadConfig, ensureConfig, makeWriteLog } from "../core/src/index.js";
 
 const PACKAGE_NAME = "metric-dashboard";
+
+// materialize config/metric-dashboard.json with defaults on load, so it's discoverable
+ensureConfig(PACKAGE_NAME, { logging: true });
 
 export { getAppConfigDir };
 
