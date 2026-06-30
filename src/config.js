@@ -6,7 +6,14 @@ import { getAppConfigDir, loadConfig, defineConfig, makeWriteLog } from "../core
 const PACKAGE_NAME = "metric-dashboard";
 
 // register defaults so the loader can discover + edit them (writes no file on load)
-defineConfig(PACKAGE_NAME, { logging: true });
+defineConfig(PACKAGE_NAME, {
+  logging: true,
+  port: 3456,
+  sync_interval_ms: 60000,
+  snapshot_ttl_ms: 5000,
+  remote_cache_ttl_ms: 15000,
+  db_path: "",
+});
 
 export { getAppConfigDir };
 

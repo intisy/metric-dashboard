@@ -4,7 +4,7 @@ import { hostname, homedir, networkInterfaces } from "os";
 import { createSign, createHash } from "crypto";
 import { createServer } from "http";
 import { createRequire } from "module";
-import { writeLog } from "./config.js";
+import { writeLog, getPluginConfig, getAppConfigDir } from "./config.js";
 import { deployCommands } from "../core/src/index.js";
 import { METRIC_COMMANDS, maybeRunCli } from "./commands.js";
 
@@ -63,7 +63,6 @@ function readJsonBody(req) {
 }
 
 
-const PORT = 3456;
 function findConfigDir(start) {
   var dir = start;
   for (var i = 0; i < 5; i++) {
@@ -79,9 +78,17 @@ function findConfigDir(start) {
 const CONFIG_DIR = findConfigDir(import.meta.dirname);
 const LOGS_DIR = join(CONFIG_DIR, "logs");
 const CONFIG_FOLDER = join(CONFIG_DIR, "config");
-const DB_PATH = join(homedir(), ".local", "share", "opencode", "opencode.db");
-const SYNC_INTERVAL_MS = 60_000;
 const SA_PATH = join(CONFIG_FOLDER, "firebase-service-account.json");
+
+// Read plugin config once at module load so all constants below reflect user settings.
+var _pluginCfg = getPluginConfig(getAppConfigDir());
+const PORT = (typeof _pluginCfg.port === "number" && _pluginCfg.port > 0) ? _pluginCfg.port : 3456;
+const SYNC_INTERVAL_MS = (typeof _pluginCfg.sync_interval_ms === "number" && _pluginCfg.sync_interval_ms > 0) ? _pluginCfg.sync_interval_ms : 60_000;
+const SNAPSHOT_TTL_CFG = (typeof _pluginCfg.snapshot_ttl_ms === "number" && _pluginCfg.snapshot_ttl_ms > 0) ? _pluginCfg.snapshot_ttl_ms : 5_000;
+const REMOTE_CACHE_TTL_CFG = (typeof _pluginCfg.remote_cache_ttl_ms === "number" && _pluginCfg.remote_cache_ttl_ms > 0) ? _pluginCfg.remote_cache_ttl_ms : 15_000;
+const DB_PATH = (typeof _pluginCfg.db_path === "string" && _pluginCfg.db_path.trim() !== "")
+  ? _pluginCfg.db_path.trim()
+  : join(homedir(), ".local", "share", "opencode", "opencode.db");
 const FIREBASE_SCOPE = "https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email";
 
 function getMacAddress() {
@@ -226,7 +233,7 @@ async function pullAllDevices() {
 }
 
 var remoteCache = { data: null, fetchedAt: 0 };
-const CACHE_TTL = 15_000;
+const CACHE_TTL = REMOTE_CACHE_TTL_CFG;
 
 async function getRemoteSnapshots() {
   var now = Date.now();
@@ -659,7 +666,7 @@ function buildSnapshot() {
 }
 
 var snapshotCache = { data: null, builtAt: 0 };
-const SNAPSHOT_TTL = 5_000;
+const SNAPSHOT_TTL = SNAPSHOT_TTL_CFG;
 
 function getCachedSnapshot() {
   var now = Date.now();
