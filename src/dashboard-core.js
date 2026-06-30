@@ -1904,9 +1904,9 @@ async function tryClaimServer() {
           writeLog("dashboard server error: " + msg, true);
         }
       });
-      srv.listen(PORT, HOST || undefined, function () {
+      srv.listen(PORT, HOST || "127.0.0.1", function () {
         ownsServer = true;
-        writeLog("dashboard server listening on http://" + (HOST || "0.0.0.0") + ":" + PORT);
+        writeLog("dashboard server listening on http://" + (HOST || "127.0.0.1") + ":" + PORT);
       });
     } catch (err) {
       writeLog("tryClaimServer failed: " + String((err && err.message) || err), true);

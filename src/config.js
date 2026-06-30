@@ -14,7 +14,7 @@ defineConfig(PACKAGE_NAME, {
   remote_cache_ttl_ms: 15000,
   db_path: "",
   enabled: true,
-  host: "",
+  host: "127.0.0.1",
   sync_enabled: true,
 });
 
